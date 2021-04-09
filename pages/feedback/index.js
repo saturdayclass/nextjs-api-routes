@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { buildFeedbackPath, extractFeedback } from './../api/feedback';
+import { buildFeedbackPath, extractFeedback } from './../api/feedback/feedback';
 
 function FeedbackPage(props) {
   const [feedbackData, setFeedback] = useState();
   const loadFeedbackHandler = async (id) => {
-    const req = await fetch(`/api/${id}`);
+    const req = await fetch(`/api/feedback/${id}`);
     const res = await req.json();
     setFeedback(res.feedback);
   };
-  console.log(feedbackData);
   return (
     <>
       {feedbackData && <p>Feedback Email : {feedbackData.email}</p>}
