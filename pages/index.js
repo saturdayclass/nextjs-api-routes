@@ -1,7 +1,9 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 function HomePage() {
   const emailInput = useRef();
   const feedbackInput = useRef();
+  const [feedbackItems, setFeedbackItems] = useState([]);
+  const [isSendFeedback, setIsSendFeedback] = useState(null);
 
   const submitForm = async (event) => {
     event.preventDefault();
@@ -22,8 +24,18 @@ function HomePage() {
       },
     });
     const res = await req.json();
-    console.log(res);
+    setIsSendFeedback(Math.random());
   };
+
+  const loadFeedback = async () => {
+    const req = await fetch('/api/feedback');
+    const res = await req.json();
+    setFeedbackItems(res.feedback);
+  };
+
+  useEffect(() => {
+    loadFeedback();
+  }, [isSendFeedback]);
 
   return (
     <div>
@@ -39,6 +51,17 @@ function HomePage() {
         </div>
         <button>Submit</button>
       </form>
+      <hr />
+      <ul>
+        {feedbackItems.map((feedback) => {
+          return (
+            <>
+              <li key={feedback.id}>{feedback.email}</li>
+              <li key={feedback.id}>{feedback.text}</li>
+            </>
+          );
+        })}
+      </ul>
     </div>
   );
 }
